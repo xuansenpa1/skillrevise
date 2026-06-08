@@ -1,0 +1,23 @@
+version = "1.0"
+
+[metadata]
+author_name = "SWE-Skills-Bench"
+difficulty = "hard"
+category = "python-resilience"
+tags = ["swe-skills-bench", "batch4", "python-resilience"]
+source_benchmark = "SWE-Skills-Bench"
+source_batch = "batch4"
+source_skill_id = "python-resilience"
+source_task_path = "python-resilience.md"
+source_test_path = "test_python_resilience.py"
+
+[verifier]
+timeout_sec = 900.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 3600.0
+cpus = 4
+memory_mb = 8192

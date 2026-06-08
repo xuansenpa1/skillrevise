@@ -1,0 +1,23 @@
+version = "1.0"
+
+[metadata]
+author_name = "SWE-Skills-Bench"
+difficulty = "hard"
+category = "dbt-transformation-patterns"
+tags = ["swe-skills-bench", "batch2", "dbt-transformation-patterns"]
+source_benchmark = "SWE-Skills-Bench"
+source_batch = "batch2"
+source_skill_id = "dbt-transformation-patterns"
+source_task_path = "dbt-transformation-patterns.md"
+source_test_path = "test_dbt_transformation_patterns.py"
+
+[verifier]
+timeout_sec = 900.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 3600.0
+cpus = 4
+memory_mb = 8192

@@ -1,0 +1,202 @@
+[
+  {
+    "name": "anthropic-poster-design-1",
+    "task_id": "anthropic-poster-design-1"
+  },
+  {
+    "name": "anthropic-poster-design-2",
+    "task_id": "anthropic-poster-design-2"
+  },
+  {
+    "name": "anthropic-poster-design-3",
+    "task_id": "anthropic-poster-design-3"
+  },
+  {
+    "name": "anthropic-poster-design-4",
+    "task_id": "anthropic-poster-design-4"
+  },
+  {
+    "name": "anthropic-poster-design-5",
+    "task_id": "anthropic-poster-design-5"
+  },
+  {
+    "name": "chinese-poem-generator-1",
+    "task_id": "chinese-poem-generator-1"
+  },
+  {
+    "name": "chinese-poem-generator-2",
+    "task_id": "chinese-poem-generator-2"
+  },
+  {
+    "name": "chinese-poem-generator-3",
+    "task_id": "chinese-poem-generator-3"
+  },
+  {
+    "name": "chinese-poem-generator-4",
+    "task_id": "chinese-poem-generator-4"
+  },
+  {
+    "name": "chinese-poem-generator-5",
+    "task_id": "chinese-poem-generator-5"
+  },
+  {
+    "name": "court-form-filling-1",
+    "task_id": "court-form-filling-1"
+  },
+  {
+    "name": "court-form-filling-2",
+    "task_id": "court-form-filling-2"
+  },
+  {
+    "name": "court-form-filling-3",
+    "task_id": "court-form-filling-3"
+  },
+  {
+    "name": "court-form-filling-4",
+    "task_id": "court-form-filling-4"
+  },
+  {
+    "name": "court-form-filling-5",
+    "task_id": "court-form-filling-5"
+  },
+  {
+    "name": "court-form-filling-6",
+    "task_id": "court-form-filling-6"
+  },
+  {
+    "name": "dependency-vulnerability-check-1",
+    "task_id": "dependency-vulnerability-check-1"
+  },
+  {
+    "name": "dependency-vulnerability-check-2",
+    "task_id": "dependency-vulnerability-check-2"
+  },
+  {
+    "name": "dependency-vulnerability-check-3",
+    "task_id": "dependency-vulnerability-check-3"
+  },
+  {
+    "name": "dependency-vulnerability-check-4",
+    "task_id": "dependency-vulnerability-check-4"
+  },
+  {
+    "name": "dependency-vulnerability-check-5",
+    "task_id": "dependency-vulnerability-check-5"
+  },
+  {
+    "name": "enterprise-information-search-1",
+    "task_id": "enterprise-information-search-1"
+  },
+  {
+    "name": "enterprise-information-search-2",
+    "task_id": "enterprise-information-search-2"
+  },
+  {
+    "name": "enterprise-information-search-3",
+    "task_id": "enterprise-information-search-3"
+  },
+  {
+    "name": "enterprise-information-search-4",
+    "task_id": "enterprise-information-search-4"
+  },
+  {
+    "name": "enterprise-information-search-5",
+    "task_id": "enterprise-information-search-5"
+  },
+  {
+    "name": "enterprise-information-search-6",
+    "task_id": "enterprise-information-search-6"
+  },
+  {
+    "name": "fix-security-bug-1",
+    "task_id": "fix-security-bug-1"
+  },
+  {
+    "name": "fix-security-bug-2",
+    "task_id": "fix-security-bug-2"
+  },
+  {
+    "name": "fix-security-bug-3",
+    "task_id": "fix-security-bug-3"
+  },
+  {
+    "name": "schedule-planning-1",
+    "task_id": "schedule-planning-1"
+  },
+  {
+    "name": "schedule-planning-2",
+    "task_id": "schedule-planning-2"
+  },
+  {
+    "name": "schedule-planning-3",
+    "task_id": "schedule-planning-3"
+  },
+  {
+    "name": "schedule-planning-4",
+    "task_id": "schedule-planning-4"
+  },
+  {
+    "name": "schedule-planning-5",
+    "task_id": "schedule-planning-5"
+  },
+  {
+    "name": "stock-data-visualization-1",
+    "task_id": "stock-data-visualization-1"
+  },
+  {
+    "name": "stock-data-visualization-2",
+    "task_id": "stock-data-visualization-2"
+  },
+  {
+    "name": "stock-data-visualization-3",
+    "task_id": "stock-data-visualization-3"
+  },
+  {
+    "name": "stock-data-visualization-4",
+    "task_id": "stock-data-visualization-4"
+  },
+  {
+    "name": "stock-data-visualization-5",
+    "task_id": "stock-data-visualization-5"
+  },
+  {
+    "name": "travel-planning-1",
+    "task_id": "travel-planning-1"
+  },
+  {
+    "name": "travel-planning-2",
+    "task_id": "travel-planning-2"
+  },
+  {
+    "name": "travel-planning-3",
+    "task_id": "travel-planning-3"
+  },
+  {
+    "name": "travel-planning-4",
+    "task_id": "travel-planning-4"
+  },
+  {
+    "name": "travel-planning-5",
+    "task_id": "travel-planning-5"
+  },
+  {
+    "name": "video-object-counting-1",
+    "task_id": "video-object-counting-1"
+  },
+  {
+    "name": "video-object-counting-2",
+    "task_id": "video-object-counting-2"
+  },
+  {
+    "name": "video-object-counting-3",
+    "task_id": "video-object-counting-3"
+  },
+  {
+    "name": "video-object-counting-4",
+    "task_id": "video-object-counting-4"
+  },
+  {
+    "name": "video-object-counting-5",
+    "task_id": "video-object-counting-5"
+  }
+]

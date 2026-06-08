@@ -1,0 +1,23 @@
+version = "1.0"
+
+[metadata]
+author_name = "SWE-Skills-Bench"
+difficulty = "hard"
+category = "implementing-agent-modes"
+tags = ["swe-skills-bench", "batch3", "implementing-agent-modes"]
+source_benchmark = "SWE-Skills-Bench"
+source_batch = "batch3"
+source_skill_id = "implementing-agent-modes"
+source_task_path = "implementing-agent-modes.md"
+source_test_path = "test_implementing_agent_modes.py"
+
+[verifier]
+timeout_sec = 900.0
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 3600.0
+cpus = 4
+memory_mb = 8192

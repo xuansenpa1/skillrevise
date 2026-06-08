@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+apikey.txt
+key.txt
+*_api.txt
+api_key.txt
+api_keys.txt
+secret.txt
+secrets.txt
+token.txt
+tokens.txt
+*.secret
+*.token
+local_secrets/
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+skillrevise/local_llm_config.py
+
+# Run artifacts
+runs/
+outputs/
+output/
+artifacts/
+temp/
+tmp/
+logs/
+released_skills/
+*.log
+*.pid
+
+# Paper/build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

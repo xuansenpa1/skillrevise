@@ -1,0 +1,346 @@
+[
+  {
+    "name": "video-silence-remover",
+    "task_id": "video-silence-remover"
+  },
+  {
+    "name": "xlsx-recover-data",
+    "task_id": "xlsx-recover-data"
+  },
+  {
+    "name": "3d-scan-calc",
+    "task_id": "3d-scan-calc"
+  },
+  {
+    "name": "azure-bgp-oscillation-route-leak",
+    "task_id": "azure-bgp-oscillation-route-leak"
+  },
+  {
+    "name": "citation-check",
+    "task_id": "citation-check"
+  },
+  {
+    "name": "civ6-adjacency-optimizer",
+    "task_id": "civ6-adjacency-optimizer"
+  },
+  {
+    "name": "dialogue-parser",
+    "task_id": "dialogue-parser"
+  },
+  {
+    "name": "econ-detrending-correlation",
+    "task_id": "econ-detrending-correlation"
+  },
+  {
+    "name": "jax-computing-basics",
+    "task_id": "jax-computing-basics"
+  },
+  {
+    "name": "lake-warming-attribution",
+    "task_id": "lake-warming-attribution"
+  },
+  {
+    "name": "powerlifting-coef-calc",
+    "task_id": "powerlifting-coef-calc"
+  },
+  {
+    "name": "weighted-gdp-calc",
+    "task_id": "weighted-gdp-calc"
+  },
+  {
+    "name": "enterprise-information-search",
+    "task_id": "enterprise-information-search"
+  },
+  {
+    "name": "invoice-fraud-detection",
+    "task_id": "invoice-fraud-detection"
+  },
+  {
+    "name": "lab-unit-harmonization",
+    "task_id": "lab-unit-harmonization"
+  },
+  {
+    "name": "manufacturing-codebook-normalization",
+    "task_id": "manufacturing-codebook-normalization"
+  },
+  {
+    "name": "manufacturing-fjsp-optimization",
+    "task_id": "manufacturing-fjsp-optimization"
+  },
+  {
+    "name": "mario-coin-counting",
+    "task_id": "mario-coin-counting"
+  },
+  {
+    "name": "sales-pivot-analysis",
+    "task_id": "sales-pivot-analysis"
+  },
+  {
+    "name": "shock-analysis-supply",
+    "task_id": "shock-analysis-supply"
+  },
+  {
+    "name": "simpo-code-reproduction",
+    "task_id": "simpo-code-reproduction"
+  },
+  {
+    "name": "adaptive-cruise-control",
+    "task_id": "adaptive-cruise-control"
+  },
+  {
+    "name": "dapt-intrusion-detection",
+    "task_id": "dapt-intrusion-detection"
+  },
+  {
+    "name": "data-to-d3",
+    "task_id": "data-to-d3"
+  },
+  {
+    "name": "energy-market-pricing",
+    "task_id": "energy-market-pricing"
+  },
+  {
+    "name": "energy-unit-commitment",
+    "task_id": "energy-unit-commitment"
+  },
+  {
+    "name": "flood-risk-analysis",
+    "task_id": "flood-risk-analysis"
+  },
+  {
+    "name": "latex-formula-extraction",
+    "task_id": "latex-formula-extraction"
+  },
+  {
+    "name": "manufacturing-equipment-maintenance",
+    "task_id": "manufacturing-equipment-maintenance"
+  },
+  {
+    "name": "threejs-structure-parser",
+    "task_id": "threejs-structure-parser"
+  },
+  {
+    "name": "virtualhome-agent-planning",
+    "task_id": "virtualhome-agent-planning"
+  },
+  {
+    "name": "bike-rebalance",
+    "task_id": "bike-rebalance"
+  },
+  {
+    "name": "court-form-filling",
+    "task_id": "court-form-filling"
+  },
+  {
+    "name": "crystallographic-wyckoff-position-analysis",
+    "task_id": "crystallographic-wyckoff-position-analysis"
+  },
+  {
+    "name": "dynamic-object-aware-egomotion",
+    "task_id": "dynamic-object-aware-egomotion"
+  },
+  {
+    "name": "earthquake-phase-association",
+    "task_id": "earthquake-phase-association"
+  },
+  {
+    "name": "earthquake-plate-calculation",
+    "task_id": "earthquake-plate-calculation"
+  },
+  {
+    "name": "edit-pdf",
+    "task_id": "edit-pdf"
+  },
+  {
+    "name": "energy-ac-optimal-power-flow",
+    "task_id": "energy-ac-optimal-power-flow"
+  },
+  {
+    "name": "exceltable-in-ppt",
+    "task_id": "exceltable-in-ppt"
+  },
+  {
+    "name": "exoplanet-detection-period",
+    "task_id": "exoplanet-detection-period"
+  },
+  {
+    "name": "financial-modeling-qa",
+    "task_id": "financial-modeling-qa"
+  },
+  {
+    "name": "find-topk-similiar-chemicals",
+    "task_id": "find-topk-similiar-chemicals"
+  },
+  {
+    "name": "fix-build-agentops",
+    "task_id": "fix-build-agentops"
+  },
+  {
+    "name": "fix-build-google-auto",
+    "task_id": "fix-build-google-auto"
+  },
+  {
+    "name": "fix-druid-loophole-cve",
+    "task_id": "fix-druid-loophole-cve"
+  },
+  {
+    "name": "fix-erlang-ssh-cve",
+    "task_id": "fix-erlang-ssh-cve"
+  },
+  {
+    "name": "flink-query",
+    "task_id": "flink-query"
+  },
+  {
+    "name": "glm-lake-mendota",
+    "task_id": "glm-lake-mendota"
+  },
+  {
+    "name": "gravitational-wave-detection",
+    "task_id": "gravitational-wave-detection"
+  },
+  {
+    "name": "grid-dispatch-operator",
+    "task_id": "grid-dispatch-operator"
+  },
+  {
+    "name": "hvac-control",
+    "task_id": "hvac-control"
+  },
+  {
+    "name": "jpg-ocr-stat",
+    "task_id": "jpg-ocr-stat"
+  },
+  {
+    "name": "lean4-proof",
+    "task_id": "lean4-proof"
+  },
+  {
+    "name": "mars-clouds-clustering",
+    "task_id": "mars-clouds-clustering"
+  },
+  {
+    "name": "multilingual-video-dubbing",
+    "task_id": "multilingual-video-dubbing"
+  },
+  {
+    "name": "offer-letter-generator",
+    "task_id": "offer-letter-generator"
+  },
+  {
+    "name": "organize-messy-files",
+    "task_id": "organize-messy-files"
+  },
+  {
+    "name": "paper-anonymizer",
+    "task_id": "paper-anonymizer"
+  },
+  {
+    "name": "parallel-tfidf-search",
+    "task_id": "parallel-tfidf-search"
+  },
+  {
+    "name": "pddl-tpp-planning",
+    "task_id": "pddl-tpp-planning"
+  },
+  {
+    "name": "pdf-excel-diff",
+    "task_id": "pdf-excel-diff"
+  },
+  {
+    "name": "pptx-reference-formatting",
+    "task_id": "pptx-reference-formatting"
+  },
+  {
+    "name": "protein-expression-analysis",
+    "task_id": "protein-expression-analysis"
+  },
+  {
+    "name": "python-scala-translation",
+    "task_id": "python-scala-translation"
+  },
+  {
+    "name": "quantum-numerical-simulation",
+    "task_id": "quantum-numerical-simulation"
+  },
+  {
+    "name": "r2r-mpc-control",
+    "task_id": "r2r-mpc-control"
+  },
+  {
+    "name": "radar-vital-signs",
+    "task_id": "radar-vital-signs"
+  },
+  {
+    "name": "react-performance-debugging",
+    "task_id": "react-performance-debugging"
+  },
+  {
+    "name": "reserves-at-risk-calc",
+    "task_id": "reserves-at-risk-calc"
+  },
+  {
+    "name": "sec-financial-report",
+    "task_id": "sec-financial-report"
+  },
+  {
+    "name": "seismic-phase-picking",
+    "task_id": "seismic-phase-picking"
+  },
+  {
+    "name": "shock-analysis-demand",
+    "task_id": "shock-analysis-demand"
+  },
+  {
+    "name": "software-dependency-audit",
+    "task_id": "software-dependency-audit"
+  },
+  {
+    "name": "spring-boot-jakarta-migration",
+    "task_id": "spring-boot-jakarta-migration"
+  },
+  {
+    "name": "suricata-custom-exfil",
+    "task_id": "suricata-custom-exfil"
+  },
+  {
+    "name": "syzkaller-ppdev-syzlang",
+    "task_id": "syzkaller-ppdev-syzlang"
+  },
+  {
+    "name": "taxonomy-tree-merge",
+    "task_id": "taxonomy-tree-merge"
+  },
+  {
+    "name": "threejs-to-obj",
+    "task_id": "threejs-to-obj"
+  },
+  {
+    "name": "travel-planning",
+    "task_id": "travel-planning"
+  },
+  {
+    "name": "fix-visual-stability",
+    "task_id": "fix-visual-stability"
+  },
+  {
+    "name": "pedestrian-traffic-counting",
+    "task_id": "pedestrian-traffic-counting"
+  },
+  {
+    "name": "pg-essay-to-audiobook",
+    "task_id": "pg-essay-to-audiobook"
+  },
+  {
+    "name": "video-filler-word-remover",
+    "task_id": "video-filler-word-remover"
+  },
+  {
+    "name": "video-tutorial-indexer",
+    "task_id": "video-tutorial-indexer"
+  },
+  {
+    "name": "paratransit-routing",
+    "task_id": "paratransit-routing"
+  }
+]

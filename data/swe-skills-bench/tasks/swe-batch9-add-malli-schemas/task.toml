@@ -1,0 +1,23 @@
+version = "1.0"
+
+[metadata]
+author_name = "SWE-Skills-Bench"
+difficulty = "hard"
+category = "add-malli-schemas"
+tags = ["swe-skills-bench", "batch9", "add-malli-schemas"]
+source_benchmark = "SWE-Skills-Bench"
+source_batch = "batch9"
+source_skill_id = "add-malli-schemas"
+source_task_path = "add-malli-schemas.md"
+source_test_path = "test_add_malli_schemas.py"
+
+[verifier]
+timeout_sec = 900.0
+
+[agent]
+timeout_sec = 2400.0
+
+[environment]
+build_timeout_sec = 3600.0
+cpus = 4
+memory_mb = 8192

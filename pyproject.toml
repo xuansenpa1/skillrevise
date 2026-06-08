@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skillrevise"
+version = "0.1.0"
+description = "Execution-grounded harness for revising LLM-authored agent skills."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+]
+analysis = [
+  "matplotlib>=3.7",
+  "numpy>=1.24",
+]
+benchmarks = [
+  "pyyaml>=6",
+]
+
+[project.scripts]
+skillrevise = "skillrevise.cli:main"
+skillrevise-convert-skillsbench = "skillrevise.benchmarks.convert_skillsbench:main"
+skillrevise-llm = "skillrevise.llm.command:main"
+
+[tool.setuptools.packages.find]
+include = ["skillrevise*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,282 @@
+[
+  {
+    "name": "swe-batch1-add-malli-schemas",
+    "task_id": "swe-batch1-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch1-bash-defensive-patterns",
+    "task_id": "swe-batch1-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch1-dbt-transformation-patterns",
+    "task_id": "swe-batch1-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch1-implementing-agent-modes",
+    "task_id": "swe-batch1-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch1-python-configuration",
+    "task_id": "swe-batch1-python-configuration"
+  },
+  {
+    "name": "swe-batch1-python-resilience",
+    "task_id": "swe-batch1-python-resilience"
+  },
+  {
+    "name": "swe-batch1-rag-implementation",
+    "task_id": "swe-batch1-rag-implementation"
+  },
+  {
+    "name": "swe-batch10-add-malli-schemas",
+    "task_id": "swe-batch10-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch10-bash-defensive-patterns",
+    "task_id": "swe-batch10-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch10-dbt-transformation-patterns",
+    "task_id": "swe-batch10-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch10-implementing-agent-modes",
+    "task_id": "swe-batch10-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch10-python-configuration",
+    "task_id": "swe-batch10-python-configuration"
+  },
+  {
+    "name": "swe-batch10-python-resilience",
+    "task_id": "swe-batch10-python-resilience"
+  },
+  {
+    "name": "swe-batch10-rag-implementation",
+    "task_id": "swe-batch10-rag-implementation"
+  },
+  {
+    "name": "swe-batch2-add-malli-schemas",
+    "task_id": "swe-batch2-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch2-bash-defensive-patterns",
+    "task_id": "swe-batch2-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch2-dbt-transformation-patterns",
+    "task_id": "swe-batch2-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch2-implementing-agent-modes",
+    "task_id": "swe-batch2-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch2-python-configuration",
+    "task_id": "swe-batch2-python-configuration"
+  },
+  {
+    "name": "swe-batch2-python-resilience",
+    "task_id": "swe-batch2-python-resilience"
+  },
+  {
+    "name": "swe-batch2-rag-implementation",
+    "task_id": "swe-batch2-rag-implementation"
+  },
+  {
+    "name": "swe-batch3-add-malli-schemas",
+    "task_id": "swe-batch3-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch3-bash-defensive-patterns",
+    "task_id": "swe-batch3-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch3-dbt-transformation-patterns",
+    "task_id": "swe-batch3-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch3-implementing-agent-modes",
+    "task_id": "swe-batch3-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch3-python-configuration",
+    "task_id": "swe-batch3-python-configuration"
+  },
+  {
+    "name": "swe-batch3-python-resilience",
+    "task_id": "swe-batch3-python-resilience"
+  },
+  {
+    "name": "swe-batch3-rag-implementation",
+    "task_id": "swe-batch3-rag-implementation"
+  },
+  {
+    "name": "swe-batch4-add-malli-schemas",
+    "task_id": "swe-batch4-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch4-bash-defensive-patterns",
+    "task_id": "swe-batch4-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch4-dbt-transformation-patterns",
+    "task_id": "swe-batch4-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch4-implementing-agent-modes",
+    "task_id": "swe-batch4-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch4-python-configuration",
+    "task_id": "swe-batch4-python-configuration"
+  },
+  {
+    "name": "swe-batch4-python-resilience",
+    "task_id": "swe-batch4-python-resilience"
+  },
+  {
+    "name": "swe-batch4-rag-implementation",
+    "task_id": "swe-batch4-rag-implementation"
+  },
+  {
+    "name": "swe-batch5-add-malli-schemas",
+    "task_id": "swe-batch5-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch5-bash-defensive-patterns",
+    "task_id": "swe-batch5-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch5-dbt-transformation-patterns",
+    "task_id": "swe-batch5-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch5-implementing-agent-modes",
+    "task_id": "swe-batch5-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch5-python-configuration",
+    "task_id": "swe-batch5-python-configuration"
+  },
+  {
+    "name": "swe-batch5-python-resilience",
+    "task_id": "swe-batch5-python-resilience"
+  },
+  {
+    "name": "swe-batch5-rag-implementation",
+    "task_id": "swe-batch5-rag-implementation"
+  },
+  {
+    "name": "swe-batch6-add-malli-schemas",
+    "task_id": "swe-batch6-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch6-bash-defensive-patterns",
+    "task_id": "swe-batch6-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch6-dbt-transformation-patterns",
+    "task_id": "swe-batch6-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch6-implementing-agent-modes",
+    "task_id": "swe-batch6-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch6-python-configuration",
+    "task_id": "swe-batch6-python-configuration"
+  },
+  {
+    "name": "swe-batch6-python-resilience",
+    "task_id": "swe-batch6-python-resilience"
+  },
+  {
+    "name": "swe-batch6-rag-implementation",
+    "task_id": "swe-batch6-rag-implementation"
+  },
+  {
+    "name": "swe-batch7-add-malli-schemas",
+    "task_id": "swe-batch7-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch7-bash-defensive-patterns",
+    "task_id": "swe-batch7-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch7-dbt-transformation-patterns",
+    "task_id": "swe-batch7-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch7-implementing-agent-modes",
+    "task_id": "swe-batch7-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch7-python-configuration",
+    "task_id": "swe-batch7-python-configuration"
+  },
+  {
+    "name": "swe-batch7-python-resilience",
+    "task_id": "swe-batch7-python-resilience"
+  },
+  {
+    "name": "swe-batch7-rag-implementation",
+    "task_id": "swe-batch7-rag-implementation"
+  },
+  {
+    "name": "swe-batch8-add-malli-schemas",
+    "task_id": "swe-batch8-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch8-bash-defensive-patterns",
+    "task_id": "swe-batch8-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch8-dbt-transformation-patterns",
+    "task_id": "swe-batch8-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch8-implementing-agent-modes",
+    "task_id": "swe-batch8-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch8-python-configuration",
+    "task_id": "swe-batch8-python-configuration"
+  },
+  {
+    "name": "swe-batch8-python-resilience",
+    "task_id": "swe-batch8-python-resilience"
+  },
+  {
+    "name": "swe-batch8-rag-implementation",
+    "task_id": "swe-batch8-rag-implementation"
+  },
+  {
+    "name": "swe-batch9-add-malli-schemas",
+    "task_id": "swe-batch9-add-malli-schemas"
+  },
+  {
+    "name": "swe-batch9-bash-defensive-patterns",
+    "task_id": "swe-batch9-bash-defensive-patterns"
+  },
+  {
+    "name": "swe-batch9-dbt-transformation-patterns",
+    "task_id": "swe-batch9-dbt-transformation-patterns"
+  },
+  {
+    "name": "swe-batch9-implementing-agent-modes",
+    "task_id": "swe-batch9-implementing-agent-modes"
+  },
+  {
+    "name": "swe-batch9-python-configuration",
+    "task_id": "swe-batch9-python-configuration"
+  },
+  {
+    "name": "swe-batch9-python-resilience",
+    "task_id": "swe-batch9-python-resilience"
+  },
+  {
+    "name": "swe-batch9-rag-implementation",
+    "task_id": "swe-batch9-rag-implementation"
+  }
+]
