@@ -9,15 +9,11 @@ commands from the repository root unless noted otherwise.
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,benchmarks]"
 ```
 
-The core package is mostly standard-library based. Install the benchmark extra
-when you need the SWE export helper:
-
-```bash
-python -m pip install -e ".[benchmarks]"
-```
+The core package is mostly standard-library based. The `benchmarks` extra adds
+PyYAML for the SWE-Skills-Bench export helper.
 
 ## Smoke Check
 
@@ -82,11 +78,11 @@ skillrevise data/skillsbench/skillsbench_tasks.json \
   --manifest-kind skillsbench \
   --workspace-root .
 
-skillrevise data/swe-skills-bench/skillsbench_tasks.json \
+skillrevise data/skilllearnbench/skillsbench_tasks.json \
   --manifest-kind skillsbench \
   --workspace-root .
 
-skillrevise data/skilllearnbench/skillsbench_tasks.json \
+skillrevise data/swe-skills-bench/skillsbench_tasks.json \
   --manifest-kind skillsbench \
   --workspace-root .
 ```
@@ -96,8 +92,9 @@ artifact paths.
 
 ## Export And Selection Helpers
 
-The release keeps only the helpers needed to recreate the public task bundles or
-inspect publishable skill artifacts:
+Helper scripts can recreate task bundles from source benchmark checkouts,
+materialize explicit task-selection files, and inspect candidate skill
+artifacts:
 
 ```bash
 python scripts/export_swe_skills_bench_as_skillsbench.py path/to/SWE-Skills-Bench \
@@ -113,5 +110,5 @@ python scripts/select_skilllearnbench_tasks.py --help
 python scripts/audit_publishable_skills.py path/to/candidate_skills
 ```
 
-The public `data/` directory already contains the final selected and processed
-benchmark bundles, so these scripts are mainly for transparency and reuse.
+Use the selection scripts when you want to regenerate manifests from an explicit
+task-selection file.
