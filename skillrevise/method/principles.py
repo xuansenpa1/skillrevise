@@ -12,6 +12,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
+from skillrevise.core.env import env_names, get_env
 from skillrevise.core.metrics import trace_outcome_score
 from skillrevise.core.models import (
     DiagnosisReport,
@@ -59,7 +60,7 @@ class AbsorbedPrincipleAbstraction:
 class PrincipleBank:
     """Repair-principle bank for diagnosing and revising LLM-authored skills.
 
-    The default bank is initialized with seed golden laws. Later revision
+    The default bank is initialized with seed repair principles. Later revision
     experience can add absorbed principles when a repair is evidence-backed,
     outcome-improving, and utility-positive.
     """
@@ -75,14 +76,14 @@ class PrincipleBank:
 
     @classmethod
     def default(cls) -> "PrincipleBank":
-        return cls.with_seed_golden_laws()
+        return cls.with_seed_principles()
 
     @classmethod
-    def with_seed_golden_laws(
+    def with_seed_principles(
         cls, *, retrieval_config: PrincipleRetrievalConfig | None = None
     ) -> "PrincipleBank":
         return cls(
-            [_materialize_principle(principle, source="seed_golden_law") for principle in DEFAULT_SEED_GOLDEN_LAWS],
+            [_materialize_principle(principle, source="seed_principle") for principle in DEFAULT_SEED_PRINCIPLES],
             retrieval_config=retrieval_config,
         )
 
@@ -95,7 +96,7 @@ class PrincipleBank:
     ) -> "PrincipleBank":
         payload = json.loads(Path(path).read_text())
         if isinstance(payload, dict):
-            items = payload.get("golden_laws", payload.get("principles", []))
+            items = payload.get("principles", [])
         else:
             items = payload
         principles = []
@@ -311,10 +312,6 @@ class PrincipleBank:
                 evidence,
             ]
         ).lower()
-
-
-class GoldenLawBank(PrincipleBank):
-    """Compatibility alias for the seed-golden-law initialization layer."""
 
 
 class PrincipleAbsorber:
@@ -995,14 +992,14 @@ def _embed_texts(texts: list[str], config: PrincipleRetrievalConfig) -> tuple[li
     local_config = _load_local_embedding_config()
     cache_path = (
         config.embedding_cache
-        or os.environ.get("SKILL_HARNESS_PRINCIPLE_EMBEDDING_CACHE")
+        or get_env(os.environ, "SKILL_REVISE_PRINCIPLE_EMBEDDING_CACHE")
         or local_config.get("cache", "")
         or ""
     )
     cache = _load_embedding_cache(cache_path) if cache_path else {}
-    model = config.embedding_model or os.environ.get(
-        "SKILL_HARNESS_PRINCIPLE_EMBEDDING_MODEL",
-        local_config.get("model", "qwen/qwen3-embedding-4b"),
+    model = config.embedding_model or (
+        get_env(os.environ, "SKILL_REVISE_PRINCIPLE_EMBEDDING_MODEL")
+        or local_config.get("model", "qwen/qwen3-embedding-4b")
     )
     embeddings: list[list[float] | None] = []
     missing: list[tuple[int, str, str]] = []
@@ -1039,7 +1036,7 @@ def _compute_embeddings(
     if endpoint:
         return _compute_embeddings_via_http(texts, config, model, endpoint)
 
-    backend = os.environ.get("SKILL_HARNESS_PRINCIPLE_EMBEDDING_BACKEND", "").strip().lower()
+    backend = (get_env(os.environ, "SKILL_REVISE_PRINCIPLE_EMBEDDING_BACKEND", "") or "").strip().lower()
     if backend in {"sentence-transformers", "sentence_transformers", "local"}:
         return _compute_embeddings_via_sentence_transformers(texts, model)
     return None, "no_embedding_backend"
@@ -1049,7 +1046,7 @@ def _embedding_endpoint(config: PrincipleRetrievalConfig) -> str:
     local_config = _load_local_embedding_config()
     endpoint = (
         config.embedding_url
-        or os.environ.get("SKILL_HARNESS_PRINCIPLE_EMBEDDING_URL")
+        or get_env(os.environ, "SKILL_REVISE_PRINCIPLE_EMBEDDING_URL")
         or local_config.get("url", "")
         or ""
     ).strip()
@@ -1064,7 +1061,7 @@ def _compute_embeddings_via_http(
     local_config = _load_local_embedding_config()
     api_key = (
         config.embedding_api_key
-        or os.environ.get("SKILL_HARNESS_PRINCIPLE_EMBEDDING_API_KEY")
+        or get_env(os.environ, "SKILL_REVISE_PRINCIPLE_EMBEDDING_API_KEY")
         or local_config.get("api_key", "")
         or ""
     )
@@ -1192,12 +1189,21 @@ def _load_local_embedding_config() -> dict[str, str]:
         from skillrevise import local_llm_config as config  # type: ignore
     except Exception:
         return {}
-    return {
-        "api_key": str(getattr(config, "SKILL_HARNESS_PRINCIPLE_EMBEDDING_API_KEY", "") or ""),
-        "url": str(getattr(config, "SKILL_HARNESS_PRINCIPLE_EMBEDDING_URL", "") or ""),
-        "model": str(getattr(config, "SKILL_HARNESS_PRINCIPLE_EMBEDDING_MODEL", "") or ""),
-        "cache": str(getattr(config, "SKILL_HARNESS_PRINCIPLE_EMBEDDING_CACHE", "") or ""),
+    keys = {
+        "api_key": "SKILL_REVISE_PRINCIPLE_EMBEDDING_API_KEY",
+        "url": "SKILL_REVISE_PRINCIPLE_EMBEDDING_URL",
+        "model": "SKILL_REVISE_PRINCIPLE_EMBEDDING_MODEL",
+        "cache": "SKILL_REVISE_PRINCIPLE_EMBEDDING_CACHE",
     }
+    values = {}
+    for field, env_name in keys.items():
+        values[field] = ""
+        for candidate in env_names(env_name):
+            value = getattr(config, candidate, "")
+            if value not in {None, ""}:
+                values[field] = str(value)
+                break
+    return values
 
 
 def _stopwords() -> set[str]:
@@ -1244,7 +1250,7 @@ def _dedupe(items: list[str]) -> list[str]:
     return deduped
 
 
-DEFAULT_SEED_GOLDEN_LAWS = [
+DEFAULT_SEED_PRINCIPLES = [
     RepairPrinciple(
         principle_id="workflow-checkpointing",
         title="Make The Skill Executable As Checkpoints",
@@ -1360,4 +1366,4 @@ DEFAULT_SEED_GOLDEN_LAWS = [
     ),
 ]
 
-DEFAULT_REPAIR_PRINCIPLES = DEFAULT_SEED_GOLDEN_LAWS
+DEFAULT_REPAIR_PRINCIPLES = DEFAULT_SEED_PRINCIPLES

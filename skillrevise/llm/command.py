@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from importlib import import_module
 from typing import Any, Mapping
 
+from skillrevise.core.env import env_flag_enabled, env_names, get_env, set_env_with_legacy
+
 
 DEFAULT_REVISION_LLM_PROVIDER = "openrouter"
 DEFAULT_REVISION_LLM_API_KEY = ""
@@ -67,28 +69,29 @@ def complete_prompt(prompt: str, env: Mapping[str, str] | None = None) -> str:
     if config.provider == "ollama":
         return complete_ollama(prompt, config)
     raise LLMCommandError(
-        f"Unsupported SKILL_HARNESS_REVISION_LLM_PROVIDER={config.provider!r}. "
+        f"Unsupported SKILL_REVISE_REVISION_LLM_PROVIDER={config.provider!r}. "
         "Use one of: openai, openrouter, anthropic, ollama."
     )
 
 
 def load_config(env: Mapping[str, str]) -> LLMCommandConfig:
-    provider = env.get("SKILL_HARNESS_REVISION_LLM_PROVIDER", DEFAULT_REVISION_LLM_PROVIDER).strip().lower()
+    provider = (get_env(env, "SKILL_REVISE_REVISION_LLM_PROVIDER", DEFAULT_REVISION_LLM_PROVIDER) or "").strip().lower()
     model = (
-        env.get("SKILL_HARNESS_REVISION_LLM_MODEL")
+        get_env(env, "SKILL_REVISE_REVISION_LLM_MODEL")
         or DEFAULT_REVISION_LLM_MODEL
     ).strip()
     if not model:
         raise LLMCommandError(
-            "Missing revision model. Set SKILL_HARNESS_REVISION_LLM_MODEL "
+            "Missing revision model. Set SKILL_REVISE_REVISION_LLM_MODEL "
             "or fill DEFAULT_REVISION_LLM_MODEL in llm_command.py."
         )
 
-    purpose = env.get("SKILL_HARNESS_REVISION_LLM_PURPOSE", "general")
-    system_prompt = env.get(
-        "SKILL_HARNESS_REVISION_LLM_SYSTEM_PROMPT",
+    purpose = get_env(env, "SKILL_REVISE_REVISION_LLM_PURPOSE", "general")
+    system_prompt = get_env(
+        env,
+        "SKILL_REVISE_REVISION_LLM_SYSTEM_PROMPT",
         (
-            "You are the LLM backend for SkillHarness. "
+            "You are the LLM backend for SkillRevise. "
             "Follow the requested output format exactly and do not add unrelated commentary. "
             f"Current purpose: {purpose}."
         ),
@@ -99,21 +102,21 @@ def load_config(env: Mapping[str, str]) -> LLMCommandConfig:
         model=model,
         base_url=_base_url_for_provider(provider, env),
         api_key=_api_key_for_provider(provider, env),
-        timeout_seconds=_env_int(env, "SKILL_HARNESS_REVISION_LLM_HTTP_TIMEOUT", DEFAULT_HTTP_TIMEOUT),
+        timeout_seconds=_env_int(env, "SKILL_REVISE_REVISION_LLM_HTTP_TIMEOUT", DEFAULT_HTTP_TIMEOUT),
         retry_attempts=max(
             1,
-            _env_int(env, "SKILL_HARNESS_REVISION_LLM_HTTP_RETRY_ATTEMPTS", DEFAULT_HTTP_RETRY_ATTEMPTS),
+            _env_int(env, "SKILL_REVISE_REVISION_LLM_HTTP_RETRY_ATTEMPTS", DEFAULT_HTTP_RETRY_ATTEMPTS),
         ),
         retry_base_delay_seconds=max(
             0.0,
             _env_float(
                 env,
-                "SKILL_HARNESS_REVISION_LLM_HTTP_RETRY_BASE_DELAY_SECONDS",
+                "SKILL_REVISE_REVISION_LLM_HTTP_RETRY_BASE_DELAY_SECONDS",
                 DEFAULT_HTTP_RETRY_BASE_DELAY_SECONDS,
             ),
         ),
-        temperature=_env_float(env, "SKILL_HARNESS_REVISION_LLM_TEMPERATURE", DEFAULT_TEMPERATURE),
-        max_tokens=_env_int(env, "SKILL_HARNESS_REVISION_LLM_MAX_TOKENS", DEFAULT_MAX_TOKENS),
+        temperature=_env_float(env, "SKILL_REVISE_REVISION_LLM_TEMPERATURE", DEFAULT_TEMPERATURE),
+        max_tokens=_env_int(env, "SKILL_REVISE_REVISION_LLM_MAX_TOKENS", DEFAULT_MAX_TOKENS),
         system_prompt=system_prompt,
         anthropic_version=env.get("ANTHROPIC_VERSION", DEFAULT_ANTHROPIC_VERSION),
     )
@@ -137,20 +140,22 @@ def _load_local_config() -> dict[str, str]:
 
     values: dict[str, str] = {}
     for key in (
-        "SKILL_HARNESS_REVISION_LLM_PROVIDER",
-        "SKILL_HARNESS_REVISION_LLM_MODEL",
-        "SKILL_HARNESS_REVISION_LLM_BASE_URL",
-        "SKILL_HARNESS_REVISION_LLM_API_KEY",
-        "SKILL_HARNESS_REVISION_LLM_TEMPERATURE",
-        "SKILL_HARNESS_REVISION_LLM_MAX_TOKENS",
-        "SKILL_HARNESS_REVISION_LLM_HTTP_TIMEOUT",
-        "SKILL_HARNESS_REVISION_LLM_SYSTEM_PROMPT",
+        "SKILL_REVISE_REVISION_LLM_PROVIDER",
+        "SKILL_REVISE_REVISION_LLM_MODEL",
+        "SKILL_REVISE_REVISION_LLM_BASE_URL",
+        "SKILL_REVISE_REVISION_LLM_API_KEY",
+        "SKILL_REVISE_REVISION_LLM_TEMPERATURE",
+        "SKILL_REVISE_REVISION_LLM_MAX_TOKENS",
+        "SKILL_REVISE_REVISION_LLM_HTTP_TIMEOUT",
+        "SKILL_REVISE_REVISION_LLM_SYSTEM_PROMPT",
         "REVISION_OPENROUTER_API_KEY",
         "REVISION_OPENROUTER_BASE_URL",
     ):
-        value = getattr(module, key, "")
-        if value not in {None, ""}:
-            values[key] = str(value)
+        for candidate in env_names(key):
+            value = getattr(module, candidate, "")
+            if value not in {None, ""}:
+                values[key] = str(value)
+                break
 
     return values
 
@@ -158,11 +163,11 @@ def _load_local_config() -> dict[str, str]:
 def complete_openai_compatible(prompt: str, config: LLMCommandConfig) -> str:
     if config.provider == "openai" and not config.api_key:
         raise LLMCommandError(
-            "Missing SKILL_HARNESS_REVISION_LLM_API_KEY for provider=openai."
+            "Missing SKILL_REVISE_REVISION_LLM_API_KEY for provider=openai."
         )
     if config.provider == "openrouter" and not config.api_key:
         raise LLMCommandError(
-            "Missing REVISION_OPENROUTER_API_KEY or SKILL_HARNESS_REVISION_LLM_API_KEY "
+            "Missing REVISION_OPENROUTER_API_KEY or SKILL_REVISE_REVISION_LLM_API_KEY "
             "for provider=openrouter."
         )
 
@@ -213,7 +218,7 @@ def complete_openai_compatible(prompt: str, config: LLMCommandConfig) -> str:
 def complete_anthropic(prompt: str, config: LLMCommandConfig) -> str:
     if not config.api_key:
         raise LLMCommandError(
-            "Missing SKILL_HARNESS_REVISION_LLM_API_KEY for provider=anthropic."
+            "Missing SKILL_REVISE_REVISION_LLM_API_KEY for provider=anthropic."
         )
 
     payload = {
@@ -382,6 +387,7 @@ def _should_retry_openai_compatible_error(
         "credits",
         "missing revision",
         "missing skillrevise_revision_llm_api_key",
+        "missing skill_revise_revision_llm_api_key",
         "missing revision_openrouter_api_key",
     )
     if any(marker in text for marker in non_retryable):
@@ -429,6 +435,7 @@ def _should_retry_anthropic_error(
         "billing",
         "credits",
         "missing skillrevise_revision_llm_api_key",
+        "missing skill_revise_revision_llm_api_key",
     )
     if any(marker in text for marker in non_retryable):
         return False
@@ -467,7 +474,7 @@ def _sleep_before_retry(base_delay_seconds: float, attempt: int) -> None:
 
 
 def _base_url_for_provider(provider: str, env: Mapping[str, str]) -> str:
-    explicit = env.get("SKILL_HARNESS_REVISION_LLM_BASE_URL") or DEFAULT_REVISION_LLM_BASE_URL
+    explicit = get_env(env, "SKILL_REVISE_REVISION_LLM_BASE_URL") or DEFAULT_REVISION_LLM_BASE_URL
     if explicit:
         return explicit.rstrip("/")
     if provider == "openai":
@@ -477,7 +484,7 @@ def _base_url_for_provider(provider: str, env: Mapping[str, str]) -> str:
     if provider == "openai-compatible":
         raise LLMCommandError(
             "provider=openai-compatible is not allowed in strict revision routing. "
-            "Use SKILL_HARNESS_REVISION_LLM_PROVIDER=openrouter/openai/anthropic/ollama."
+            "Use SKILL_REVISE_REVISION_LLM_PROVIDER=openrouter/openai/anthropic/ollama."
         )
     if provider == "anthropic":
         return DEFAULT_ANTHROPIC_BASE_URL
@@ -487,7 +494,7 @@ def _base_url_for_provider(provider: str, env: Mapping[str, str]) -> str:
 
 
 def _api_key_for_provider(provider: str, env: Mapping[str, str]) -> str | None:
-    explicit = env.get("SKILL_HARNESS_REVISION_LLM_API_KEY") or DEFAULT_REVISION_LLM_API_KEY
+    explicit = get_env(env, "SKILL_REVISE_REVISION_LLM_API_KEY") or DEFAULT_REVISION_LLM_API_KEY
     if explicit:
         return explicit
     if provider == "openrouter":
@@ -521,7 +528,7 @@ def _is_openai_new_completion_model(model: str) -> bool:
 
 
 def _env_int(env: Mapping[str, str], key: str, default: int) -> int:
-    value = env.get(key)
+    value = get_env(env, key)
     if value is None or value == "":
         return default
     try:
@@ -531,7 +538,7 @@ def _env_int(env: Mapping[str, str], key: str, default: int) -> int:
 
 
 def _env_float(env: Mapping[str, str], key: str, default: float) -> float:
-    value = env.get(key)
+    value = get_env(env, key)
     if value is None or value == "":
         return default
     try:
@@ -541,14 +548,13 @@ def _env_float(env: Mapping[str, str], key: str, default: float) -> float:
 
 
 def _bypass_proxy_enabled(env: Mapping[str, str]) -> bool:
-    value = env.get("SKILL_HARNESS_BYPASS_PROXY") or env.get("SKILL_HARNESS_NO_PROXY")
-    return str(value).lower() in {"1", "true", "yes", "on"}
+    return env_flag_enabled(env, "SKILL_REVISE_BYPASS_PROXY") or env_flag_enabled(env, "SKILL_REVISE_NO_PROXY")
 
 
 def _strip_proxy_from_process_env() -> None:
     for key in PROXY_ENV_KEYS:
         os.environ.pop(key, None)
-    os.environ["SKILL_HARNESS_BYPASS_PROXY"] = "1"
+    set_env_with_legacy(os.environ, "SKILL_REVISE_BYPASS_PROXY", "1")
 
 
 def main() -> None:

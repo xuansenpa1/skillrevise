@@ -104,8 +104,6 @@ class LLMRevisionEngine:
         fallback: RevisionEngine | None = None,
         principle_bank: PrincipleBank | None = None,
         principle_limit: int = 4,
-        golden_law_bank: PrincipleBank | None = None,
-        golden_law_limit: int | None = None,
         allow_fallback: bool = True,
         use_principle_memory: bool = True,
         revision_ablation: str = "none",
@@ -117,10 +115,8 @@ class LLMRevisionEngine:
         self.checker = SkillConstraintChecker(self.prior)
         self.fallback = fallback or HeuristicRevisionEngine(self.prior)
         self.allow_fallback = allow_fallback
-        self.principle_bank = principle_bank or golden_law_bank or PrincipleBank.default()
-        self.principle_limit = golden_law_limit if golden_law_limit is not None else principle_limit
-        self.golden_law_bank = self.principle_bank
-        self.golden_law_limit = self.principle_limit
+        self.principle_bank = principle_bank or PrincipleBank.default()
+        self.principle_limit = principle_limit
         self.use_principle_memory = use_principle_memory
         self.revision_ablation = revision_ablation
 
@@ -177,7 +173,6 @@ class LLMRevisionEngine:
                 "revision_trace": revision_trace,
                 "failure_primary": _trace_failure_primary(revision_trace),
                 "principle_ids": [principle.principle_id for principle in selected_principles],
-                "golden_law_ids": [principle.principle_id for principle in selected_principles],
             }
             if _include_execution_anchors(self.revision_ablation):
                 metadata["execution_anchors"] = _trace_execution_anchors(revision_trace)
@@ -202,7 +197,6 @@ class LLMRevisionEngine:
             candidate.revised_skill.metadata["removed_mechanism"] = removed_mechanism
             candidate.revised_skill.metadata["principle_memory_enabled"] = using_principle_memory
             candidate.revised_skill.metadata["principle_ids"] = [principle.principle_id for principle in principles]
-            candidate.revised_skill.metadata["golden_law_ids"] = [principle.principle_id for principle in principles]
             candidate.revised_skill.metadata["retrieved_principle_ids"] = [
                 principle.principle_id for principle in principles
             ]
@@ -325,7 +319,7 @@ class LLMRevisionEngine:
         sections = [
             "Revise this task-family skill using execution evidence and the repair-principle bank.",
             self.checker.render_prompt_prior(),
-            "Top-k candidate repair principles retrieved from the principle bank (seed golden laws are the bank foundation):",
+            "Top-k candidate repair principles retrieved from the principle bank:",
             rendered_principles,
             _principle_bank_revision_protocol(
                 include_execution_anchors=include_execution_anchors,
@@ -418,7 +412,7 @@ class FreeFormLLMRevisionEngine:
         return "\n\n".join(
             [
                 "Improve this LLM-authored task skill using the observed execution feedback.",
-                "Do not use any predefined failure taxonomy, golden-law checklist, or structured defect labels.",
+                "Do not use any predefined failure taxonomy, repair-principle checklist, or structured defect labels.",
                 "Keep useful parts of the current skill, remove misleading parts, and make the revised skill reusable.",
                 "Do not regress other verifier checks that already passed while addressing the observed feedback.",
                 f"Task family: {task.family}",
@@ -437,10 +431,6 @@ class FreeFormLLMRevisionEngine:
             return f"v{int(version[1:]) + 1}"
         except ValueError:
             return f"{version}-revised"
-
-
-def _golden_law_revision_protocol() -> str:
-    return _principle_bank_revision_protocol()
 
 
 def _principle_bank_revision_protocol(

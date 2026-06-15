@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from skillrevise.core.agents import MockAgentAdapter
+from skillrevise.core.env import get_env
 from skillrevise.benchmarks.alfworld import ALFWorldTaskLoader
 from skillrevise.method.authoring import (
     FileSkillAuthor,
@@ -90,8 +91,7 @@ def _apply_ablation_condition(args: argparse.Namespace) -> None:
 
 
 def _experiment_config(args: argparse.Namespace, weights) -> dict[str, Any]:
-    principle_bank = args.principle_bank or args.golden_law_bank
-    principle_limit = args.principle_limit if args.principle_limit is not None else (args.golden_law_limit or 4)
+    principle_limit = args.principle_limit if args.principle_limit is not None else 4
     return {
         "ablation_condition": getattr(args, "ablation_condition", "full"),
         "utility_preset": args.utility_preset,
@@ -122,7 +122,7 @@ def _experiment_config(args: argparse.Namespace, weights) -> dict[str, Any]:
             "no-preserve-ledger": "preserve ledger",
         }.get(getattr(args, "revision_ablation", "none"), "unknown"),
         "principle_memory_enabled": not getattr(args, "disable_principle_memory", False),
-        "principle_bank": principle_bank,
+        "principle_bank": args.principle_bank,
         "principle_limit": principle_limit,
         "principle_retrieval": getattr(args, "principle_retrieval", "hybrid-rrf"),
         "principle_embedding_model": getattr(args, "principle_embedding_model", "qwen/qwen3-embedding-4b"),
@@ -132,8 +132,6 @@ def _experiment_config(args: argparse.Namespace, weights) -> dict[str, Any]:
         "principle_semantic_weight": getattr(args, "principle_semantic_weight", 0.5),
         "principle_rrf_k": getattr(args, "principle_rrf_k", 60),
         "principle_dense_content_weight": getattr(args, "principle_dense_content_weight", 0.05),
-        "golden_law_bank": args.golden_law_bank,
-        "golden_law_limit": args.golden_law_limit,
         "enable_principle_absorption": args.enable_principle_absorption,
         "principle_bank_output": args.principle_bank_output,
         "baseline_only": args.baseline_only,
@@ -193,7 +191,7 @@ def _trajectory_event_from_json(data: dict[str, Any]) -> TrajectoryEvent:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run the minimal utility-guided skill harness.")
+    parser = argparse.ArgumentParser(description="Run SkillRevise skill generation, diagnosis, and revision.")
     parser.add_argument("tasks", help="Path to a JSON file containing task specs.")
     parser.add_argument("--output", default="skillrevise_run.json", help="Where to save the run artifact.")
     parser.add_argument("--summary-output", help="Optional path for a compact summary JSON artifact.")
@@ -254,7 +252,6 @@ def main() -> None:
             "llm",
             "llm-principle",
             "llm-principle-bank",
-            "llm-golden-law",
             "llm-naive",
             "llm-skill-creator",
         ),
@@ -280,7 +277,7 @@ def main() -> None:
     parser.add_argument(
         "--authoring-principle-interface",
         choices=("legacy", "action-map"),
-        default=os.environ.get("SKILL_HARNESS_AUTHORING_PRINCIPLE_INTERFACE", "legacy"),
+        default=get_env(os.environ, "SKILL_REVISE_AUTHORING_PRINCIPLE_INTERFACE", "legacy"),
         help=(
             "How v0 direct skill authoring turns retrieved principles into the initial skill. "
             "Use legacy to restore the previous prompt behavior."
@@ -288,7 +285,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--revision-mode",
-        choices=("heuristic", "llm", "llm-structured", "llm-principle-bank", "llm-golden-law", "llm-freeform"),
+        choices=("heuristic", "llm", "llm-structured", "llm-principle-bank", "llm-freeform"),
         default="heuristic",
         help="How to revise skills.",
     )
@@ -302,16 +299,10 @@ def main() -> None:
         ),
     )
     parser.add_argument("--principle-bank", help="Optional JSON repair-principle bank for structured LLM revision.")
-    parser.add_argument("--golden-law-bank", help="Deprecated alias for --principle-bank.")
     parser.add_argument(
         "--principle-limit",
         type=int,
         help="Maximum number of retrieved repair principles injected into structured LLM revision.",
-    )
-    parser.add_argument(
-        "--golden-law-limit",
-        type=int,
-        help="Deprecated alias for --principle-limit.",
     )
     parser.add_argument(
         "--principle-retrieval",
@@ -331,7 +322,7 @@ def main() -> None:
         "--principle-embedding-url",
         help=(
             "OpenAI-compatible embeddings endpoint or base URL. If omitted, dense retrieval "
-            "uses SKILL_HARNESS_PRINCIPLE_EMBEDDING_URL from the environment or local config."
+            "uses SKILL_REVISE_PRINCIPLE_EMBEDDING_URL from the environment or local config."
         ),
     )
     parser.add_argument(
@@ -467,14 +458,14 @@ def main() -> None:
     llm = CommandLLMClient(args.llm_command, timeout_seconds=args.llm_timeout) if args.llm_command else None
     if (
         args.author_mode
-        in {"llm", "llm-principle", "llm-principle-bank", "llm-golden-law", "llm-naive", "llm-skill-creator"}
+        in {"llm", "llm-principle", "llm-principle-bank", "llm-naive", "llm-skill-creator"}
         or args.diagnosis_mode == "llm"
-        or args.revision_mode in {"llm", "llm-structured", "llm-principle-bank", "llm-golden-law", "llm-freeform"}
+        or args.revision_mode in {"llm", "llm-structured", "llm-principle-bank", "llm-freeform"}
     ) and llm is None:
         parser.error("--llm-command is required when any mode is set to llm")
 
-    principle_path = args.principle_bank or args.golden_law_bank
-    principle_limit = args.principle_limit if args.principle_limit is not None else (args.golden_law_limit or 4)
+    principle_path = args.principle_bank
+    principle_limit = args.principle_limit if args.principle_limit is not None else 4
     principle_retrieval_config = PrincipleRetrievalConfig(
         method=args.principle_retrieval,
         embedding_model=args.principle_embedding_model,
@@ -488,15 +479,15 @@ def main() -> None:
     principle_bank = (
         PrincipleBank.from_json(principle_path, retrieval_config=principle_retrieval_config)
         if principle_path
-        else PrincipleBank.with_seed_golden_laws(retrieval_config=principle_retrieval_config)
+        else PrincipleBank.with_seed_principles(retrieval_config=principle_retrieval_config)
     )
 
     if args.initial_skill:
         author = FileSkillAuthor(args.initial_skill, version=args.initial_skill_version)
-    elif args.author_mode in {"llm", "llm-principle", "llm-principle-bank", "llm-golden-law"}:
+    elif args.author_mode in {"llm", "llm-principle", "llm-principle-bank"}:
         authoring_principle_bank = (
             principle_bank
-            if args.author_mode in {"llm-principle-bank", "llm-golden-law"} and not args.disable_principle_memory
+            if args.author_mode == "llm-principle-bank" and not args.disable_principle_memory
             else None
         )
         author = LLMSkillAuthor(
@@ -538,7 +529,7 @@ def main() -> None:
             llm,
             allow_fallback=not args.strict_llm,
         )  # type: ignore[arg-type]
-    elif args.revision_mode in {"llm", "llm-structured", "llm-principle-bank", "llm-golden-law"}:
+    elif args.revision_mode in {"llm", "llm-structured", "llm-principle-bank"}:
         reviser = LLMRevisionEngine(
             llm,
             principle_bank=principle_bank,

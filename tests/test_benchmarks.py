@@ -363,8 +363,8 @@ def test_command_agent_harness_returns_timeout_execution(tmp_path: Path) -> None
             "import time; print('starting harness', flush=True); time.sleep(3)",
         ],
         env={
-            "SKILL_HARNESS_TIMEOUT_GRACE_SECONDS": "0",
-            "SKILL_HARNESS_OUTER_TIMEOUT_EXTRA_SECONDS": "0",
+            "SKILL_REVISE_TIMEOUT_GRACE_SECONDS": "0",
+            "SKILL_REVISE_OUTER_TIMEOUT_EXTRA_SECONDS": "0",
         },
     )
     task = TaskSpec(
@@ -385,7 +385,7 @@ def test_command_agent_harness_returns_timeout_execution(tmp_path: Path) -> None
 
 def test_proxy_bypass_strips_proxy_environment() -> None:
     env = {
-        "SKILL_HARNESS_BYPASS_PROXY": "1",
+        "SKILL_REVISE_BYPASS_PROXY": "1",
         "HTTPS_PROXY": "http://proxy.example",
         "http_proxy": "http://proxy.example",
         "OPENAI_API_KEY": "keep",
@@ -397,4 +397,4 @@ def test_proxy_bypass_strips_proxy_environment() -> None:
     assert "HTTPS_PROXY" not in cleaned
     assert "http_proxy" not in cleaned
     assert cleaned["OPENAI_API_KEY"] == "keep"
-    assert cleaned["SKILL_HARNESS_BYPASS_PROXY"] == "1"
+    assert cleaned["SKILL_REVISE_BYPASS_PROXY"] == "1"

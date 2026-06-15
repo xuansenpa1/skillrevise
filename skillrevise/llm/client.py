@@ -7,6 +7,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Protocol
 
+from skillrevise.core.env import env_flag_enabled, set_env_with_legacy
+
 
 PROXY_ENV_KEYS = {
     "HTTP_PROXY",
@@ -29,13 +31,13 @@ class LLMResponse:
 
 class LLMClient(Protocol):
     def complete(self, prompt: str, *, purpose: str) -> LLMResponse:
-        """Return a completion for one harness prompt."""
+        """Return a completion for one SkillRevise prompt."""
 
 
 class CommandLLMClient:
     """Runs an external LLM command that reads the prompt from stdin.
 
-    This keeps the harness independent from OpenAI, Anthropic, local models, or any
+    This keeps SkillRevise independent from OpenAI, Anthropic, local models, or any
     specific SDK. The command should write the final model response to stdout.
     """
 
@@ -56,7 +58,7 @@ class CommandLLMClient:
         env.update(self.env)
         if _bypass_proxy_enabled(env):
             env = _without_proxy_env(env)
-        env["SKILL_HARNESS_REVISION_LLM_PURPOSE"] = purpose
+        set_env_with_legacy(env, "SKILL_REVISE_REVISION_LLM_PURPOSE", purpose)
 
         started = time.perf_counter()
         completed = subprocess.run(
@@ -95,11 +97,10 @@ class StaticLLMClient:
 
 
 def _bypass_proxy_enabled(env: dict[str, str]) -> bool:
-    value = env.get("SKILL_HARNESS_BYPASS_PROXY") or env.get("SKILL_HARNESS_NO_PROXY")
-    return str(value).lower() in {"1", "true", "yes", "on"}
+    return env_flag_enabled(env, "SKILL_REVISE_BYPASS_PROXY") or env_flag_enabled(env, "SKILL_REVISE_NO_PROXY")
 
 
 def _without_proxy_env(env: dict[str, str]) -> dict[str, str]:
     cleaned = {key: value for key, value in env.items() if key not in PROXY_ENV_KEYS}
-    cleaned["SKILL_HARNESS_BYPASS_PROXY"] = "1"
+    set_env_with_legacy(cleaned, "SKILL_REVISE_BYPASS_PROXY", "1")
     return cleaned

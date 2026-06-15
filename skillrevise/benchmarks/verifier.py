@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+from skillrevise.core.env import set_env_with_legacy
 from skillrevise.core.models import TaskSpec
 
 
@@ -49,8 +50,8 @@ class CommandVerifier:
         argv = shlex.split(command) if isinstance(command, str) else list(command)
         env = os.environ.copy()
         env.update(self.env)
-        env["SKILL_HARNESS_TASK_ID"] = task.task_id
-        env["SKILL_HARNESS_WORKSPACE"] = str(workspace)
+        set_env_with_legacy(env, "SKILL_REVISE_TASK_ID", task.task_id)
+        set_env_with_legacy(env, "SKILL_REVISE_WORKSPACE", str(workspace))
 
         completed = subprocess.run(
             argv,

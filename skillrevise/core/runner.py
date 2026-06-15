@@ -5,6 +5,7 @@ import os
 from typing import Any
 
 from skillrevise.core.agents import AgentAdapter
+from skillrevise.core.env import get_env
 from skillrevise.core.metrics import UtilityWeights, compute_utility, trace_outcome_score
 from skillrevise.core.models import ExecutionTrace, PairedEvaluation, Skill, TaskSpec
 
@@ -22,7 +23,7 @@ class PairedRunner:
         self.weights = weights or UtilityWeights()
         self._baseline_cache: dict[str, ExecutionTrace] = dict(baseline_traces or {})
         if max_evaluation_attempts is None:
-            max_evaluation_attempts = _env_int("SKILL_HARNESS_EVALUATION_RETRY_ATTEMPTS", 3)
+            max_evaluation_attempts = _env_int("SKILL_REVISE_EVALUATION_RETRY_ATTEMPTS", 3)
         self.max_evaluation_attempts = max(1, int(max_evaluation_attempts))
 
     def evaluate(
@@ -155,7 +156,7 @@ class PairedRunner:
 
 
 def _env_int(name: str, default: int) -> int:
-    raw = os.environ.get(name)
+    raw = get_env(os.environ, name)
     if raw in (None, ""):
         return default
     try:

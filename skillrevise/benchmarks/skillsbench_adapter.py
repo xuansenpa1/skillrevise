@@ -13,6 +13,7 @@ from typing import Any, Protocol
 
 from skillrevise.core.agents import AgentAdapter
 from skillrevise.core.artifacts import ArtifactStore
+from skillrevise.core.env import env_flag_enabled, get_env, set_env_with_legacy
 from skillrevise.core.models import ExecutionTrace, Skill, TaskSpec, TrajectoryEvent
 from skillrevise.benchmarks.verifier import CommandVerifier, Verifier, VerifierResult
 
@@ -58,11 +59,11 @@ class CommandAgentHarness:
     """Runs an external harness command and optionally consumes a JSON trace file.
 
     The external process can read these environment variables:
-    - SKILL_HARNESS_TASK_ID
-    - SKILL_HARNESS_WORKSPACE
-    - SKILL_HARNESS_SKILL_PATH
-    - SKILL_HARNESS_TRACE_PATH
-    - SKILL_HARNESS_INSTRUCTION
+    - SKILL_REVISE_TASK_ID
+    - SKILL_REVISE_WORKSPACE
+    - SKILL_REVISE_SKILL_PATH
+    - SKILL_REVISE_TRACE_PATH
+    - SKILL_REVISE_INSTRUCTION
     """
 
     def __init__(
@@ -89,17 +90,18 @@ class CommandAgentHarness:
         env.update(self.env)
         if _bypass_proxy_enabled(env):
             env = _without_proxy_env(env)
-        env["SKILL_HARNESS_TASK_ID"] = task.task_id
-        env["SKILL_HARNESS_WORKSPACE"] = str(workspace)
-        env["SKILL_HARNESS_TRACE_PATH"] = str(trace_path)
-        env["SKILL_HARNESS_INSTRUCTION"] = task.instruction
-        env["SKILL_HARNESS_SKILL_PATH"] = "" if skill_path is None else str(skill_path)
+        set_env_with_legacy(env, "SKILL_REVISE_TASK_ID", task.task_id)
+        set_env_with_legacy(env, "SKILL_REVISE_WORKSPACE", str(workspace))
+        set_env_with_legacy(env, "SKILL_REVISE_TRACE_PATH", str(trace_path))
+        set_env_with_legacy(env, "SKILL_REVISE_INSTRUCTION", task.instruction)
+        set_env_with_legacy(env, "SKILL_REVISE_SKILL_PATH", "" if skill_path is None else str(skill_path))
         timeout_seconds = int(task.metadata.get("timeout_seconds", self.timeout_seconds))
-        env.setdefault("SKILL_HARNESS_TIMEOUT", str(timeout_seconds))
+        if get_env(env, "SKILL_REVISE_TIMEOUT") is None:
+            set_env_with_legacy(env, "SKILL_REVISE_TIMEOUT", str(timeout_seconds))
         outer_timeout = (
             timeout_seconds
-            + int(env.get("SKILL_HARNESS_TIMEOUT_GRACE_SECONDS", "900"))
-            + int(env.get("SKILL_HARNESS_OUTER_TIMEOUT_EXTRA_SECONDS", "300"))
+            + int(get_env(env, "SKILL_REVISE_TIMEOUT_GRACE_SECONDS", "900") or "900")
+            + int(get_env(env, "SKILL_REVISE_OUTER_TIMEOUT_EXTRA_SECONDS", "300") or "300")
         )
 
         start = time.perf_counter()
@@ -173,13 +175,12 @@ class CommandAgentHarness:
 
 
 def _bypass_proxy_enabled(env: dict[str, str]) -> bool:
-    value = env.get("SKILL_HARNESS_BYPASS_PROXY") or env.get("SKILL_HARNESS_NO_PROXY")
-    return str(value or "").lower() in {"1", "true", "yes", "on"}
+    return env_flag_enabled(env, "SKILL_REVISE_BYPASS_PROXY") or env_flag_enabled(env, "SKILL_REVISE_NO_PROXY")
 
 
 def _without_proxy_env(env: dict[str, str]) -> dict[str, str]:
     cleaned = {key: value for key, value in env.items() if key not in _PROXY_ENV_KEYS}
-    cleaned["SKILL_HARNESS_BYPASS_PROXY"] = "1"
+    set_env_with_legacy(cleaned, "SKILL_REVISE_BYPASS_PROXY", "1")
     return cleaned
 
 

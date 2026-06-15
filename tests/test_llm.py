@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
+from skillrevise.core.env import legacy_env_name
 from skillrevise.llm import CommandLLMClient
 
 
@@ -15,7 +16,7 @@ def test_command_llm_client_can_bypass_proxy(monkeypatch) -> None:
         captured["env"] = env
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
-    monkeypatch.setenv("SKILL_HARNESS_BYPASS_PROXY", "1")
+    monkeypatch.setenv("SKILL_REVISE_BYPASS_PROXY", "1")
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example")
     monkeypatch.setenv("http_proxy", "http://proxy.example")
     monkeypatch.setattr("skillrevise.llm.client.subprocess.run", fake_run)
@@ -25,7 +26,8 @@ def test_command_llm_client_can_bypass_proxy(monkeypatch) -> None:
     assert response.text == "ok"
     assert "HTTPS_PROXY" not in captured["env"]
     assert "http_proxy" not in captured["env"]
-    assert captured["env"]["SKILL_HARNESS_REVISION_LLM_PURPOSE"] == "skill_authoring"
+    assert captured["env"]["SKILL_REVISE_REVISION_LLM_PURPOSE"] == "skill_authoring"
+    assert captured["env"][legacy_env_name("SKILL_REVISE_REVISION_LLM_PURPOSE")] == "skill_authoring"
 
 
 # Provider command wrapper
@@ -54,13 +56,13 @@ def test_openai_compatible_wrapper_builds_chat_completion_payload(monkeypatch) -
     output = llm_command.complete_prompt(
         "write a skill",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openai",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "test-model",
-            "SKILL_HARNESS_REVISION_LLM_API_KEY": "test-key",
-            "SKILL_HARNESS_REVISION_LLM_PURPOSE": "skill_authoring",
-            "SKILL_HARNESS_REVISION_LLM_TEMPERATURE": "0.1",
-            "SKILL_HARNESS_REVISION_LLM_MAX_TOKENS": "1234",
-            "SKILL_HARNESS_REVISION_LLM_HTTP_TIMEOUT": "77",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "openai",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "test-model",
+            "SKILL_REVISE_REVISION_LLM_API_KEY": "test-key",
+            "SKILL_REVISE_REVISION_LLM_PURPOSE": "skill_authoring",
+            "SKILL_REVISE_REVISION_LLM_TEMPERATURE": "0.1",
+            "SKILL_REVISE_REVISION_LLM_MAX_TOKENS": "1234",
+            "SKILL_REVISE_REVISION_LLM_HTTP_TIMEOUT": "77",
         },
     )
 
@@ -86,10 +88,10 @@ def test_official_openai_gpt5_uses_new_token_parameter(monkeypatch) -> None:
     output = llm_command.complete_prompt(
         "ping",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openai",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "gpt-5.5",
-            "SKILL_HARNESS_REVISION_LLM_API_KEY": "test-key",
-            "SKILL_HARNESS_REVISION_LLM_MAX_TOKENS": "20",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "openai",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "gpt-5.5",
+            "SKILL_REVISE_REVISION_LLM_API_KEY": "test-key",
+            "SKILL_REVISE_REVISION_LLM_MAX_TOKENS": "20",
         },
     )
 
@@ -114,10 +116,10 @@ def test_openai_compatible_wrapper_retries_missing_choices(monkeypatch) -> None:
     output = llm_command.complete_prompt(
         "write a skill",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-test",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-test",
             "REVISION_OPENROUTER_API_KEY": "revision-key",
-            "SKILL_HARNESS_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "2",
+            "SKILL_REVISE_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "2",
         },
     )
 
@@ -139,10 +141,10 @@ def test_openai_compatible_wrapper_does_not_retry_auth_errors(monkeypatch) -> No
         llm_command.complete_prompt(
             "write a skill",
             {
-                "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
-                "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-test",
+                "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
+                "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-test",
                 "REVISION_OPENROUTER_API_KEY": "revision-key",
-                "SKILL_HARNESS_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "3",
+                "SKILL_REVISE_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "3",
             },
         )
 
@@ -161,9 +163,9 @@ def test_anthropic_wrapper_extracts_text_blocks(monkeypatch) -> None:
     output = llm_command.complete_prompt(
         "diagnose",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "anthropic",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "claude-test",
-            "SKILL_HARNESS_REVISION_LLM_API_KEY": "test-key",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "anthropic",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "claude-test",
+            "SKILL_REVISE_REVISION_LLM_API_KEY": "test-key",
         },
     )
 
@@ -186,9 +188,9 @@ def test_anthropic_wrapper_extracts_deepseek_compatible_content_shapes(monkeypat
     monkeypatch.setattr(llm_command, "_post_json", fake_post_json)
 
     env = {
-        "SKILL_HARNESS_REVISION_LLM_PROVIDER": "anthropic",
-        "SKILL_HARNESS_REVISION_LLM_MODEL": "deepseek-test",
-        "SKILL_HARNESS_REVISION_LLM_API_KEY": "test-key",
+        "SKILL_REVISE_REVISION_LLM_PROVIDER": "anthropic",
+        "SKILL_REVISE_REVISION_LLM_MODEL": "deepseek-test",
+        "SKILL_REVISE_REVISION_LLM_API_KEY": "test-key",
     }
     assert llm_command.complete_prompt("revise", env) == "plain text content"
     assert llm_command.complete_prompt("revise", env) == "missing type text"
@@ -210,10 +212,10 @@ def test_anthropic_wrapper_retries_empty_content(monkeypatch) -> None:
     output = llm_command.complete_prompt(
         "revise",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "anthropic",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "deepseek-test",
-            "SKILL_HARNESS_REVISION_LLM_API_KEY": "test-key",
-            "SKILL_HARNESS_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "2",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "anthropic",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "deepseek-test",
+            "SKILL_REVISE_REVISION_LLM_API_KEY": "test-key",
+            "SKILL_REVISE_REVISION_LLM_HTTP_RETRY_ATTEMPTS": "2",
         },
     )
 
@@ -233,8 +235,8 @@ def test_ollama_wrapper_uses_local_generate_endpoint(monkeypatch) -> None:
     output = llm_command.complete_prompt(
         "revise",
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "ollama",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "llama-test",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "ollama",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "llama-test",
         },
     )
 
@@ -253,9 +255,9 @@ def test_wrapper_ignores_generic_key_base_url_and_model_config() -> None:
     with pytest.raises(llm_command.LLMCommandError, match="Missing revision model"):
         llm_command.load_config(
             {
-                "SKILL_HARNESS_LLM_API_KEY": "generic-key",
-                "SKILL_HARNESS_LLM_BASE_URL": "https://example.test/v1",
-                "SKILL_HARNESS_LLM_MODEL": "generic-model",
+                "SKILL_REVISE_LLM_API_KEY": "generic-key",
+                "SKILL_REVISE_LLM_BASE_URL": "https://example.test/v1",
+                "SKILL_REVISE_LLM_MODEL": "generic-model",
             }
         )
 
@@ -263,9 +265,9 @@ def test_wrapper_ignores_generic_key_base_url_and_model_config() -> None:
 def test_wrapper_uses_revision_key_base_url_and_model_config() -> None:
     config = llm_command.load_config(
         {
-            "SKILL_HARNESS_REVISION_LLM_API_KEY": "revision-key",
-            "SKILL_HARNESS_REVISION_LLM_BASE_URL": "https://example.test/v1",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "revision-model",
+            "SKILL_REVISE_REVISION_LLM_API_KEY": "revision-key",
+            "SKILL_REVISE_REVISION_LLM_BASE_URL": "https://example.test/v1",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "revision-model",
         }
     )
 
@@ -275,12 +277,26 @@ def test_wrapper_uses_revision_key_base_url_and_model_config() -> None:
     assert config.model == "revision-model"
 
 
+def test_wrapper_accepts_legacy_revision_llm_env_names() -> None:
+    config = llm_command.load_config(
+        {
+            legacy_env_name("SKILL_REVISE_REVISION_LLM_API_KEY"): "legacy-revision-key",
+            legacy_env_name("SKILL_REVISE_REVISION_LLM_BASE_URL"): "https://legacy.example.test/v1",
+            legacy_env_name("SKILL_REVISE_REVISION_LLM_MODEL"): "legacy-revision-model",
+        }
+    )
+
+    assert config.api_key == "legacy-revision-key"
+    assert config.base_url == "https://legacy.example.test/v1"
+    assert config.model == "legacy-revision-model"
+
+
 def test_openrouter_provider_uses_openrouter_key_and_base_url() -> None:
     config = llm_command.load_config(
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
             "REVISION_OPENROUTER_API_KEY": "openrouter-key",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-5.2",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-5.2",
         }
     )
 
@@ -293,9 +309,9 @@ def test_openrouter_provider_uses_openrouter_key_and_base_url() -> None:
 def test_revision_aliases_configure_revision_llm() -> None:
     config = llm_command.load_config(
         {
-            "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
+            "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
             "REVISION_OPENROUTER_API_KEY": "revision-key",
-            "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-5.5",
+            "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-5.5",
         }
     )
 
@@ -307,10 +323,10 @@ def test_revision_aliases_configure_revision_llm() -> None:
 
 def test_revision_llm_ignores_agent_embedding_and_legacy_keys() -> None:
     env = {
-        "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
-        "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-5.5",
+        "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
+        "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-5.5",
         "AGENT_OPENROUTER_API_KEY": "agent-key",
-        "SKILL_HARNESS_PRINCIPLE_EMBEDDING_API_KEY": "embedding-key",
+        "SKILL_REVISE_PRINCIPLE_EMBEDDING_API_KEY": "embedding-key",
         "OPENROUTER_API_KEY": "legacy-key",
         "OPENAI_API_KEY": "openai-key",
     }
@@ -323,12 +339,12 @@ def test_revision_llm_ignores_agent_embedding_and_legacy_keys() -> None:
 
 
 def test_openai_provider_requires_api_key() -> None:
-    with pytest.raises(llm_command.LLMCommandError, match="Missing SKILL_HARNESS_REVISION_LLM_API_KEY"):
+    with pytest.raises(llm_command.LLMCommandError, match="Missing SKILL_REVISE_REVISION_LLM_API_KEY"):
         llm_command.complete_prompt(
             "prompt",
             {
-                "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openai",
-                "SKILL_HARNESS_REVISION_LLM_MODEL": "test-model",
+                "SKILL_REVISE_REVISION_LLM_PROVIDER": "openai",
+                "SKILL_REVISE_REVISION_LLM_MODEL": "test-model",
             },
         )
 
@@ -338,14 +354,14 @@ def test_openrouter_provider_requires_api_key() -> None:
         llm_command.complete_prompt(
             "prompt",
             {
-                "SKILL_HARNESS_REVISION_LLM_PROVIDER": "openrouter",
-                "SKILL_HARNESS_REVISION_LLM_MODEL": "openai/gpt-5.2",
+                "SKILL_REVISE_REVISION_LLM_PROVIDER": "openrouter",
+                "SKILL_REVISE_REVISION_LLM_MODEL": "openai/gpt-5.2",
             },
         )
 
 
 def test_proxy_bypass_strips_process_proxy_environment(monkeypatch) -> None:
-    monkeypatch.setenv("SKILL_HARNESS_BYPASS_PROXY", "1")
+    monkeypatch.setenv("SKILL_REVISE_BYPASS_PROXY", "1")
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example")
     monkeypatch.setenv("http_proxy", "http://proxy.example")
 
@@ -353,7 +369,7 @@ def test_proxy_bypass_strips_process_proxy_environment(monkeypatch) -> None:
 
     assert "HTTPS_PROXY" not in llm_command.os.environ
     assert "http_proxy" not in llm_command.os.environ
-    assert llm_command.os.environ["SKILL_HARNESS_BYPASS_PROXY"] == "1"
+    assert llm_command.os.environ["SKILL_REVISE_BYPASS_PROXY"] == "1"
 
 
 # LLM authoring, diagnosis, revision, and principles
@@ -375,7 +391,7 @@ from skillrevise.core.models import (
     TaskSpec,
     TrajectoryEvent,
 )
-from skillrevise.method.principles import GoldenLawBank, PrincipleAbsorber, PrincipleBank, PrincipleRetrievalConfig
+from skillrevise.method.principles import PrincipleAbsorber, PrincipleBank, PrincipleRetrievalConfig
 from skillrevise.method.revision import FreeFormLLMRevisionEngine, LLMRevisionEngine
 
 
@@ -439,7 +455,7 @@ def make_trace(
 def bm25_revision_engine(llm: StaticLLMClient, **kwargs) -> LLMRevisionEngine:
     return LLMRevisionEngine(
         llm,
-        principle_bank=PrincipleBank.with_seed_golden_laws(
+        principle_bank=PrincipleBank.with_seed_principles(
             retrieval_config=PrincipleRetrievalConfig(method="bm25")
         ),
         **kwargs,
@@ -626,7 +642,6 @@ def test_llm_revision_engine_bumps_version_and_parses_revised_skill() -> None:
     assert candidate.revised_skill.metadata["revision_protocol_version"] == "principle_revision_v2"
     assert candidate.revised_skill.metadata["retrieved_principle_ids"]
     assert "revision_trace" in candidate.revised_skill.metadata
-    assert candidate.revised_skill.metadata["golden_law_ids"]
     assert candidate.revised_skill.metadata["principle_ids"]
     assert llm.calls[0]["purpose"] == "skill_revision"
 
@@ -658,7 +673,7 @@ def test_llm_revision_engine_can_disable_principle_memory_but_keep_diagnosis() -
 
     candidate = LLMRevisionEngine(
         llm,
-        principle_bank=PrincipleBank.with_seed_golden_laws(
+        principle_bank=PrincipleBank.with_seed_principles(
             retrieval_config=PrincipleRetrievalConfig(method="bm25")
         ),
         use_principle_memory=False,
@@ -1071,17 +1086,12 @@ def test_principle_bank_retrieves_environment_output_repair_rule() -> None:
         summary="Output path grounding failed.",
     )
 
-    bank = PrincipleBank.with_seed_golden_laws(
+    bank = PrincipleBank.with_seed_principles(
         retrieval_config=PrincipleRetrievalConfig(method="bm25")
     )
-    golden_law_bank = GoldenLawBank.with_seed_golden_laws(
-        retrieval_config=PrincipleRetrievalConfig(method="bm25")
-    )
-
     principles = bank.retrieve(task, diagnosis, limit=2)
 
     assert principles[0].principle_id == "environment-output-grounding"
-    assert golden_law_bank.retrieve(task, diagnosis, limit=2)[0].principle_id == "environment-output-grounding"
 
 
 def test_principle_bank_hybrid_rrf_retrieval_requires_dense_backend(monkeypatch) -> None:
@@ -1104,7 +1114,7 @@ def test_principle_bank_hybrid_rrf_retrieval_requires_dense_backend(monkeypatch)
         rewrite_targets=["Assert every task-specified output path exists before finalizing."],
         summary="Missing output.",
     )
-    bank = PrincipleBank.with_seed_golden_laws(
+    bank = PrincipleBank.with_seed_principles(
         retrieval_config=PrincipleRetrievalConfig(method="hybrid-rrf")
     )
 
@@ -1135,7 +1145,7 @@ def test_embedding_http_ignores_legacy_openai_key(monkeypatch) -> None:
         return FakeResponse()
 
     monkeypatch.setenv("OPENAI_API_KEY", "legacy-openai-key")
-    monkeypatch.delenv("SKILL_HARNESS_PRINCIPLE_EMBEDDING_API_KEY", raising=False)
+    monkeypatch.delenv("SKILL_REVISE_PRINCIPLE_EMBEDDING_API_KEY", raising=False)
     monkeypatch.setattr(principles_module, "_load_local_embedding_config", lambda: {})
     monkeypatch.setattr(principles_module.urllib.request, "urlopen", fake_urlopen)
 
@@ -1329,8 +1339,8 @@ def test_freeform_revision_omits_structured_principle_bank() -> None:
 
     assert candidate.revised_skill.metadata["reviser"] == "llm_freeform"
     assert llm.calls[0]["purpose"] == "skill_revision_freeform"
-    assert "Retrieved seed golden laws:" not in llm.calls[0]["prompt"]
-    assert "Golden-law revision protocol:" not in llm.calls[0]["prompt"]
+    assert "Retrieved seed repair principles:" not in llm.calls[0]["prompt"]
+    assert "Principle-bank revision protocol:" not in llm.calls[0]["prompt"]
     assert "Retrieved repair principles" not in llm.calls[0]["prompt"]
     assert "Principle-bank revision protocol:" not in llm.calls[0]["prompt"]
     assert "REVISION_TRACE_JSON" not in llm.calls[0]["prompt"]

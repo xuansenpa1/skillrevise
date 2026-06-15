@@ -1,4 +1,4 @@
-"""Minimal utility-guided skill harness."""
+"""SkillRevise public package."""
 
 from skillrevise.core.agents import MockAgentAdapter
 from skillrevise.method.authoring import (
@@ -14,7 +14,7 @@ from skillrevise.method.diagnosis import Diagnoser, HeuristicDiagnoser, LLMDiagn
 from skillrevise.llm import CommandLLMClient, StaticLLMClient
 from skillrevise.core.loop import HarnessLoop
 from skillrevise.core.metrics import UTILITY_PRESETS, UtilityWeights, utility_weights_for_preset
-from skillrevise.method.principles import GoldenLawBank, PrincipleAbsorber, PrincipleBank
+from skillrevise.method.principles import PrincipleAbsorber, PrincipleBank
 from skillrevise.core.reporting import summarize_results
 from skillrevise.method.revision import FreeFormLLMRevisionEngine, HeuristicRevisionEngine, LLMRevisionEngine
 from skillrevise.core.runner import PairedRunner
@@ -28,7 +28,6 @@ __all__ = [
     "CommandLLMClient",
     "Diagnoser",
     "FreeFormLLMRevisionEngine",
-    "GoldenLawBank",
     "HarnessLoop",
     "HeuristicDiagnoser",
     "HeuristicRevisionEngine",

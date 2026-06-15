@@ -2,7 +2,7 @@
 
 This directory contains the final benchmark bundles used by the SkillRevise
 main experiments. Each bundle is already materialized into a SkillsBench-style
-layout and can be loaded directly by the harness.
+layout and can be loaded directly by the `skillrevise` CLI.
 
 Bundles:
 

@@ -42,9 +42,9 @@ Set provider credentials through environment variables. Example with a generic
 OpenAI-compatible endpoint:
 
 ```bash
-export SKILL_HARNESS_REVISION_LLM_PROVIDER=openai
-export SKILL_HARNESS_REVISION_LLM_MODEL="<model-name>"
-export SKILL_HARNESS_REVISION_LLM_API_KEY="<api-key>"
+export SKILL_REVISE_REVISION_LLM_PROVIDER=openai
+export SKILL_REVISE_REVISION_LLM_MODEL="<model-name>"
+export SKILL_REVISE_REVISION_LLM_API_KEY="<api-key>"
 ```
 
 Then run:

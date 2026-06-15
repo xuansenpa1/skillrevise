@@ -163,7 +163,7 @@ def _validate_tasks(tasks: list[TaskSpec]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Convert a SkillsBench-style manifest into SkillHarness TaskSpec JSON.")
+    parser = argparse.ArgumentParser(description="Convert a SkillsBench-style manifest into SkillRevise TaskSpec JSON.")
     parser.add_argument("input", help="Input SkillsBench-style JSON or JSONL manifest.")
     parser.add_argument("output", help="Output TaskSpec JSON manifest.")
     parser.add_argument("--workspace-root", help="Root used to resolve relative repo_path values.")

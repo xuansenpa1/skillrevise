@@ -69,8 +69,6 @@ def test_experiment_config_prefers_principle_bank_names() -> None:
         revision_mode="llm-principle-bank",
         principle_bank="principles.json",
         principle_limit=4,
-        golden_law_bank="legacy-laws.json",
-        golden_law_limit=3,
         enable_principle_absorption=True,
         principle_bank_output="updated.json",
         baseline_only=False,
@@ -84,27 +82,23 @@ def test_experiment_config_prefers_principle_bank_names() -> None:
 
     assert config["principle_bank"] == "principles.json"
     assert config["principle_limit"] == 4
-    assert config["golden_law_bank"] == "legacy-laws.json"
-    assert config["golden_law_limit"] == 3
     assert config["enable_principle_absorption"] is True
     assert config["principle_bank_output"] == "updated.json"
     assert config["initial_skill"] is None
 
 
-def test_experiment_config_honors_legacy_golden_law_limit() -> None:
+def test_experiment_config_uses_default_principle_limit() -> None:
     args = Namespace(
         utility_preset="success-only",
         max_revisions=1,
         max_heldout=None,
         budget_seconds=None,
         repeat=1,
-        author_mode="llm-golden-law",
+        author_mode="llm-principle-bank",
         diagnosis_mode="heuristic",
-        revision_mode="llm-golden-law",
+        revision_mode="llm-principle-bank",
         principle_bank=None,
         principle_limit=None,
-        golden_law_bank="legacy-laws.json",
-        golden_law_limit=3,
         enable_principle_absorption=False,
         principle_bank_output=None,
         baseline_only=False,
@@ -116,8 +110,8 @@ def test_experiment_config_honors_legacy_golden_law_limit() -> None:
 
     config = _experiment_config(args, weights)
 
-    assert config["principle_bank"] == "legacy-laws.json"
-    assert config["principle_limit"] == 3
+    assert config["principle_bank"] is None
+    assert config["principle_limit"] == 4
     assert config["initial_skill"] == "skill_v0.md"
 
 
@@ -149,8 +143,6 @@ def test_experiment_config_records_ablation_flags() -> None:
         disable_principle_memory=True,
         principle_bank="principles.json",
         principle_limit=3,
-        golden_law_bank=None,
-        golden_law_limit=None,
         enable_principle_absorption=True,
         principle_bank_output=None,
         baseline_only=False,
