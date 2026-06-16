@@ -18,12 +18,12 @@ SkillRevise improves cold-start agent skills by treating a skill as an execution
 
 ## Main Results
 
-The paper evaluates SkillRevise across three verifier-driven benchmarks and five executors. The table below reports the strongest SkillRevise v3 result observed on each benchmark, together with the corresponding no-skill and one-shot Skill-Creator baselines for that executor:
+The paper evaluates SkillRevise across three verifier-driven benchmarks and five executors. The table below highlights representative settings from the main results, together with the corresponding no-skill and one-shot Skill-Creator baselines for the same executor:
 
 | Benchmark | Executor | No skill | Skill-Creator | SkillRevise v3 |
 | --- | --- | ---: | ---: | ---: |
 | SkillsBench | GPT-5.5 | 31/86 | 34/86 | **53/86** |
-| SkillLearnBench-Random | GPT-5.5 | 20/50 | 17/50 | **29/50** |
+| SkillLearnBench-Random | Opus-4.7 | 7/50 | 7/50 | **25/50** |
 | SWE-Skills-Bench-Hard | Qwen-3.6-Plus | 22/70 | 24/70 | **35/70** |
 
 The revised skills also show cross-model transfer behavior: fixed GPT-5.5-produced skills improve several target executors on the 57-task GPT-5.5 source-success subset, while executor-specific revision remains strongest in most cases.
